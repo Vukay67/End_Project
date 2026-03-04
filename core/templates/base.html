@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Anime World</title>
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+</head>
+
+    <header class="header">
+        <a href="{% url 'main_page' %}" class="logo">AnimeWorld</a>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="{% url 'about_page' %}">О нас</a></li>
+                <li><a href="{% url 'contacts_page' %}">Контакты</a></li>
+                <li><a href="#profile" class="profile-btn">Профиль</a></li>
+            </ul>
+        </nav>
+    </header>
+
+{% block content %}
+{% endblock %}
+
+    <footer class="footer">
+        <p>© 2026 AnimeWorld. Все права защищены.</p>
+    </footer>
+</html>

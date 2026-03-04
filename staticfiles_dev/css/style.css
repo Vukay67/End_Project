@@ -1,0 +1,241 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #0f0f1a;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: linear-gradient(90deg, #ff4d6d, #7b2cbf);
+}
+
+.logo {
+    display: block;      
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none; 
+    color: white;            
+}
+
+.logo:visited {
+    color: white;
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.nav a:hover {
+    color: #ffd60a;
+}
+
+.profile-btn {
+    padding: 8px 15px;
+    background-color: white;
+    color: #7b2cbf !important;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.profile-btn:hover {
+    background-color: #ffd60a;
+    color: black !important;
+}
+
+/* ===== MAIN ===== */
+
+.main {
+    flex: 1; /* ЭТО главное */
+    padding: 100px 20px;
+    text-align: center;
+}
+
+/* ===== FOOTER ===== */
+
+.footer {
+    background-color: #1a1a2e;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #aaa;
+}
+/* ===== ABOUT PAGE ===== */
+
+.about {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.about h1 {
+    font-size: 42px;
+    background: linear-gradient(90deg, #ff4d6d, #7b2cbf);
+    -webkit-background-clip: text;
+    background-clip: text;    
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+}
+
+.about-subtitle {
+    color: #aaa;
+    font-size: 18px;
+    margin-bottom: 60px;
+}
+
+.about-cards {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+}
+
+.about-card {
+    background-color: #1a1a2e;
+    border: 1px solid #2e2e4d;
+    border-radius: 16px;
+    padding: 36px 28px;
+    width: 300px;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.about-card:hover {
+    transform: translateY(-6px);
+    border-color: #ff4d6d;
+}
+
+.about-icon {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.about-card h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: white;
+}
+
+.about-card p {
+    color: #aaa;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.about-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    background-color: #1a1a2e;
+    border-radius: 16px;
+    padding: 40px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-number {
+    font-size: 36px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff4d6d, #7b2cbf);
+    -webkit-background-clip: text;
+    background-clip: text;    
+    -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+/* ===== CONTACTS PAGE ===== */
+
+.contacts {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.contacts h1 {
+    font-size: 42px;
+    background: linear-gradient(90deg, #ff4d6d, #7b2cbf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+}
+
+.contacts-subtitle {
+    color: #aaa;
+    font-size: 18px;
+    margin-bottom: 50px;
+}
+
+.contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+}
+
+.contact-card {
+    background-color: #1a1a2e;
+    border: 1px solid #2e2e4d;
+    border-radius: 16px;
+    padding: 36px 20px;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.contact-card:hover {
+    transform: translateY(-6px);
+    border-color: #ff4d6d;
+}
+
+.contact-icon {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 14px;
+}
+
+.contact-card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.contact-card p {
+    color: #ffd60a;
+    font-size: 14px;
+}
