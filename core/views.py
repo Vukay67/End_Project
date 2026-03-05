@@ -53,3 +53,6 @@ def register_page(request):
     }
 
     return render(request, 'register.html', context)
+
+def profil_page(request):
+    return render(request, "profil.html", {})

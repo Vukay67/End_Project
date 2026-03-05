@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+class Anime(models.Model):
+    name = models.CharField()
+    image = models.ImageField(upload_to="anime_poster")
+    description = models.TextField()

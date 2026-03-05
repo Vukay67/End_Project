@@ -82,6 +82,23 @@ class RegistrationForm(forms.Form):
         
         return username
     
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+
+        if password.isdigit() or password.isalpha():
+            raise forms.ValidationError("Пароль не может состоят только из цифр или букв")
+
+        if not password.strip():
+            raise forms.ValidationError("Пароль не может быть пустым")
+
+        if any(c.isspace() for c in password):
+            raise forms.ValidationError("Пароль не должен содержать пробелы")
+
+        if len(password) < 8:
+            raise forms.ValidationError("Пароль должен содержать минимум 8 символов")
+
+        return password
+    
     def clean(self):
         cleaned_data = super().clean()
         p1 = cleaned_data.get("password")
