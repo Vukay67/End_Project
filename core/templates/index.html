@@ -1,9 +1,59 @@
 {% extends './base.html' %}
 {% block content %}
     <main class="main">
+
+        <!-- HERO -->
         <section class="hero">
-            <h1>Добро пожаловать в мир аниме!</h1>
-            <p>Смотри лучшие аниме онлайн и читай новости.</p>
+            <div class="hero-bg">
+                <span class="hero-blur hero-blur-1"></span>
+                <span class="hero-blur hero-blur-2"></span>
+            </div>
+            <div class="hero-content">
+                <p class="hero-label">✦ Лучший аниме-портал</p>
+                <h1 class="hero-title">Добро пожаловать<br>в мир <span class="hero-highlight">аниме!</span></h1>
+                <p class="hero-sub">Смотри лучшие аниме онлайн, веди список и следи за новинками.</p>
+                <div class="hero-actions">
+                    
+                    <a href="#" class="btn-primary">Смотреть сейчас</a>
+                    <a href="{% url 'all_anime_page' %}" class="btn-secondary">Каталог</a>
+                </div>
+            </div>
         </section>
+
+        <!-- ANIME GRID -->
+        <section class="catalog">
+            <div class="catalog-header">
+                <h2 class="catalog-title">🔥 Популярное</h2>
+            </div>
+
+            <div class="anime-grid">
+                {% for anime in anime %}
+                <a href="{% url 'anime_detail_page' anime.slug %}" class="anime-grid-card">
+                    <div class="anime-grid-thumb">
+                        {% if anime.image %}
+                            <img src="{{ anime.image.url }}" alt="{{ anime.name }}" />
+                        {% else %}
+                            <div class="anime-grid-no-img">{{ anime.name|first }}</div>
+                        {% endif %}
+                        <span class="anime-grid-year">{{ anime.release_year|date:"Y" }}</span>
+                    </div>
+                    <div class="anime-grid-info">
+                        <span class="anime-grid-title">{{ anime.name }}</span>
+                        <span class="anime-grid-genre">
+                            {% for genre in anime.genres.all %}
+                                {{ genre.name }}{% if not forloop.last %} · {% endif %}
+                            {% empty %}
+                                Без жанра
+                            {% endfor %}
+                        </span>
+                    </div>
+                </a>
+                {% empty %}
+                <p class="catalog-empty">Аниме пока не добавлено 😔</p>
+                {% endfor %}
+            </div>
+
+        </section>
+
     </main>
 {% endblock %}
