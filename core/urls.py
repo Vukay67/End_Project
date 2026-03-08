@@ -1,5 +1,5 @@
 ﻿from django.urls import path
-from .views import main_page, about_page, contacts_page, login_page, register_page, profil_page, anime_detail_page, all_anime_page
+from .views import * 
 
 urlpatterns = [
     path('', main_page, name="main_page"),
@@ -9,5 +9,8 @@ urlpatterns = [
     path('register/', register_page, name="register_page"),
     path('profil/', profil_page, name="profil_page"),
     path('anime/<str:slug>/', anime_detail_page, name="anime_detail_page"),
-    path('anime/', all_anime_page, name="all_anime_page")
+    path('anime/', all_anime_page, name="all_anime_page"),
+    path('films/', films_page, name="films_page"),
+    path('characters/', characters_page, name="characters_page"),
+    path('episode/<int:episode_id>/', episode_detail_page, name='episode_detail'),
 ]

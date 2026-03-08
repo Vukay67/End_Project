@@ -68,18 +68,12 @@ def profil_page(request):
     return render(request, "profil.html", {})
 
 def anime_detail_page(request, slug):
-    # anime_1 = Anime.objects.get(slug=slug)
-    # series = anime_1.episode.all()
     anime = get_object_or_404(
         Anime.objects.prefetch_related('genres', 'seasons__episodes'),
         slug=slug
     )
-
-    # series_count = series.count()
-
     context = {
         "anime": anime,
-            # "series_count": series_count
     }
 
     return render(request, "anime_detail.html", context)
@@ -117,3 +111,18 @@ def all_anime_page(request):
         'sort_option': sort_option,
     }
     return render(request, 'all_anime.html', context)
+
+def films_page(request):
+    return render(request, "films.html", {})
+
+def characters_page(request):
+    return render(request, "characters.html", {})
+
+def episode_detail_page(request, episode_id):
+    episode = get_object_or_404(Episode.objects.select_related('season__anime'), id=episode_id)
+
+    context = {
+        "episode": episode
+    }
+
+    return render(request, 'episode_detail.html', context)

@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% block content %}
+
+<div style="border:1px solid #ccc; padding:15px; border-radius:8px;">
+    <h1>Эпизод {{ episode.episode_number }}: {{ episode.title }}</h1>
+    <h2>Аниме: {{ episode.season.anime.name }}</h2>
+    <p><strong>Сезон:</strong> {{ episode.season.seasons_number }}</p>
+    <p><strong>Описание:</strong> {{ episode.season.anime.description }}</p>
+    <p><strong>Год выхода:</strong> {{ episode.season.anime.release_year }}</p>
+    <p><strong>Рейтинг Shikimori:</strong> {{ episode.season.anime.shikimori_rating }}</p>
+    <p><strong>Наш рейтинг:</strong> {{ episode.season.anime.our_rating }}</p>
+    
+    {% if episode.video %}
+    <video width="600" controls>
+        <source src="{{ episode.video.url }}" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+    </video>
+    {% else %}
+    <p>Видео отсутствует</p>
+    {% endif %}
+</div>
+
+{% endblock %}

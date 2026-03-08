@@ -32,8 +32,9 @@
 
         <nav class="nav">
             <ul>
-                <li><a href="{% url 'about_page' %}">О нас</a></li>
-                <li><a href="{% url 'contacts_page' %}">Контакты</a></li>
+                <li><a href="{% url 'all_anime_page' %}">Каталог</a></li>
+                <li><a href="{% url 'films_page' %}">Фильмы</a></li>
+                <li><a href="{% url 'characters_page' %}">Персонажи</a></li>
                 <li><a href="{% url 'profil_page' %}" class="profile-btn">Профиль</a></li>
             </ul>
         </nav>
@@ -43,6 +44,10 @@
 {% endblock %}
 
     <footer class="footer">
+        <ul>
+            <li><a href="{% url 'about_page' %}">О нас</a></li>
+            <li><a href="{% url 'contacts_page' %}">Контакты</a></li>
+        </ul>
         <p>© 2026 AnimeWorld. Все права защищены.</p>
     </footer>
 </body>

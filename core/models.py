@@ -14,6 +14,8 @@ class Anime(models.Model):
     image = models.ImageField(upload_to="anime_poster")
     description = models.TextField()
     release_year = models.DateField("Дата")
+    shikimori_rating = models.PositiveIntegerField()
+    our_rating = models.PositiveIntegerField()
 
     genres = models.ManyToManyField("Genre", related_name="animes")
 
@@ -41,7 +43,6 @@ class SeasonAnime(models.Model):
         return f"Аниме: {self.anime} || Сезон: {self.seasons_number}"
 
 class Episode(models.Model):
-    anime = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name="anime")
     season = models.ForeignKey(SeasonAnime, on_delete=models.CASCADE, related_name="episodes")
 
     title = models.CharField()
@@ -50,5 +51,21 @@ class Episode(models.Model):
     video = models.FileField(upload_to="episodes/")
 
     def __str__(self):
-        return f"Аниме: {self.anime} || Сезон: {self.season} || Называние: {self.title} || Эпизод: {self.episode_number}"
+        return f"Аниме: {self.season.anime} || Сезон: {self.season} || Называние: {self.title} || Эпизод: {self.episode_number}"
+
+class Films(models.Model):
+    anime = models.ForeignKey(
+        Anime, 
+        on_delete=models.CASCADE, 
+        related_name="films",
+        blank=True,          
+        null=True           
+    )
+    title = models.CharField(max_length=200)
+    release_date = models.DateField("Дата выхода", blank=True, null=True)
+
+    def __str__(self):
+        anime_name = self.anime.name if self.anime else "Без аниме"
+        return f"Фильм: {self.title} || Аниме: {anime_name}"
+    
 

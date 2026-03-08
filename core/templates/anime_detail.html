@@ -4,7 +4,6 @@
 
     <!-- DETAIL HERO -->
     <section class="detail-hero">
-        <!-- Размытый фон из постера -->
         {% if anime.image %}
         <div class="detail-hero-bg" style="background-image: url('{{ anime.image.url }}');"></div>
         {% else %}
@@ -35,41 +34,43 @@
                     <p class="detail-desc" id="descText">{{ anime.description }}</p>
                     <button class="desc-toggle" id="descToggle" onclick="toggleDesc()">ещё...</button>
                 </div>
-
                 <div class="detail-actions">
                     <a class="btn-primary" href="#wached">▶ Смотреть</a>
-                    <a class="btn-secondary">+ В список</a>
+                    <button class="btn-secondary">+ В список</button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- СЕЗОНЫ И ЭПИЗОДЫ -->
-    <section class="detail-seasons">
+    <section class="detail-seasons" id="wached">
         <h2 class="detail-section-title">🎬 Сезоны и эпизоды</h2>
 
+        <div class="seasons-list" id="seasons-wrapper">
         {% for season in anime.seasons.all %}
-        <div class="season-block" id="wached">
-            <div class="season-header" onclick="toggleSeason(this)">
-                <span>Сезон {{ season.seasons_number }}</span>
-                <!-- <span>{{ series_count }}</span> -->
-                <span class="season-arrow">▾</span>
-            </div>
-            <div class="season-episodes">
-                {% for episode in season.episodes.all %}
-                <div class="episode-row">
-                    <span class="episode-num">{{ episode.episode_number }}</span>
-                    <span class="episode-title">{{ episode.title }}</span>
-                    <a href="{{ episode.video.url }}" class="episode-play">▶</a>
+            <div class="season-block">
+                <div class="season-header" onclick="toggleSeason(this)">
+                    <span>Сезон {{ season.seasons_number }}</span>
+                    <span class="season-ep-count">{{ season.episodes.count }} эп.</span>
+                    <span class="season-arrow">▾</span>
                 </div>
-                {% empty %}
-                <p class="season-empty">Эпизоды не добавлены</p>
-                {% endfor %}
+                <div class="season-episodes" data-ep-count="{{ season.episodes.count }}">
+                    {% for episode in season.episodes.all %}
+                    <div class="episode-row">
+                        <span class="episode-num">{{ episode.episode_number }}</span>
+                        <span class="episode-title">{{ episode.title }}</span>
+                        <a href="{% url 'episode_detail_page' %}" class="episode-play">▶</a>
+                    </div>
+                    {% empty %}
+                    <p class="season-empty">Эпизоды не добавлены</p>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
         {% empty %}
         <p class="season-empty-main">Сезоны пока не добавлены 😔</p>
         {% endfor %}
+        </div>
+
     </section>
 
 </main>
@@ -88,10 +89,15 @@ function toggleSeason(header) {
     const isOpen = episodes.classList.toggle('open');
     arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
 }
-// Открыть первый сезон по умолчанию
+
 document.addEventListener('DOMContentLoaded', () => {
-    const first = document.querySelector('.season-header');
-    if (first) first.click();
+    // Если сезонов > 6 — оборачиваем wrapper в скроллящийся контейнер
+    const wrapper = document.getElementById('seasons-wrapper');
+    const blocks = wrapper.querySelectorAll('.season-block');
+
+    if (blocks.length > 6) {
+        wrapper.classList.add('seasons-wrapper-scrollable');
+    }
 });
 </script>
 {% endblock %}
