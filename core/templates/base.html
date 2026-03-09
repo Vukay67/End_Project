@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Anime World</title>
+    <title>Ret</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -27,7 +27,7 @@
                 <path d="M9 17 Q11 12 15 13" fill="white"/>
                 <path d="M31 17 Q29 12 25 13" fill="white"/>
             </svg>
-            AnimeWorld
+            Ret
         </a>
 
         <nav class="nav">
@@ -35,7 +35,13 @@
                 <li><a href="{% url 'all_anime_page' %}">Каталог</a></li>
                 <li><a href="{% url 'films_page' %}">Фильмы</a></li>
                 <li><a href="{% url 'characters_page' %}">Персонажи</a></li>
-                <li><a href="{% url 'profil_page' %}" class="profile-btn">Профиль</a></li>
+                <li>
+                    <a href="{% url 'profil_page' %}" class="profile-btn">
+                        <svg class="nav-avatar-icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </a>
+                </li>
             </ul>
         </nav>
     </header>

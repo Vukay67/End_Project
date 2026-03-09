@@ -13,4 +13,5 @@ urlpatterns = [
     path('films/', films_page, name="films_page"),
     path('characters/', characters_page, name="characters_page"),
     path('episode/<int:episode_id>/', episode_detail_page, name='episode_detail'),
+    path('gg/', all_gg_page, name="all_gg_page")
 ]

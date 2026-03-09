@@ -1,4 +1,75 @@
 {% extends './base.html' %}
 {% block content %}
+<main class="main">
 
+    <form> 
+
+        <input placeholder="Введите имя персонажа на английском" type="text" name="search" value=""> 
+        <button type="submit" class="search-btn">Найти</button>
+
+        <select name="eye_color" class="filter-select" onchange="this.form.submit()">
+            <option value="">Цвет глаз</option>
+            {% for color in eye_colors %}
+                <option value="{{ color }}" {% if selected_eye == color %}selected{% endif %}>
+                    {{ color }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="hair_color" class="filter-select" onchange="this.form.submit()">
+            <option value="">Цвет валос</option>
+            {% for color in hair_colors %}
+            <option value="{{ color }}" {% if selected_hair == color %}selected{% endif %}>
+                    {{ color }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <select name="gender" class="filter-select" onchange="this.form.submit()">
+            <option value="">Пол</option>
+            {% for g in genders %}
+            <option value="{{ g }}" {% if selected_gender == g %}selected{% endif %}>
+                {{ g }}
+            </option>
+            {% endfor %}
+        </select>
+
+    </form>
+
+    <section class="characters-page">
+        <h1 class="characters-title">Персонажи</h1>
+
+        <div class="characters-grid">
+            {% for c in character %}
+            <div class="char-card">
+                <div class="char-thumb">
+                    {% if c.image %}
+                        <img src="{{ c.image.url }}" alt="{{ c.name }}"/>
+                    {% else %}
+                        <div class="char-no-img">{{ c.name|first }}</div>
+                    {% endif %}
+                </div>
+                <div class="char-info">
+                    <h3 class="char-name">
+                        {{ c.name }}
+                        {% if c.gg %}
+                            <a href="{% url 'all_gg_page' %}" class="char-gg">★ ГГ</a>
+                        {% endif %}
+                    </h3>
+                    <a href="{% url 'anime_detail_page' c.anime.slug %}" class="char-anime">{{ c.anime.name }}</a>
+                    <div class="char-details">
+                        <span class="char-tag">👁 {{ c.eye_color }}</span>
+                        <span class="char-tag">💇 {{ c.hair_color }}</span>
+                        <span class="char-tag">🎂 {{ c.age }} лет</span>
+                        <span class="char-tag">⚧ {{ c.gender }}</span>
+                        <span class="char-tag">🧬 {{ c.species }}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="characters-empty">Персонажи пока не добавлены 😔</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
 {% endblock %}

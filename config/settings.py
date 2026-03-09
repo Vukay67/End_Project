@@ -12,6 +12,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = "login_page"
 
 INSTALLED_APPS = [
     'django.contrib.admin',

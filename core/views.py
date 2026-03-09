@@ -6,15 +6,13 @@ from .forms import AuthenticationForm, RegistrationForm
 from .models import *
 from django.db import models as db_models
 from django.shortcuts import get_object_or_404
-from random import choices
+
 
 def main_page(request):
     anime = Anime.objects.prefetch_related('genres').all()
-    ran_ani = choices(anime)
 
     context = {
         "anime": anime,
-        "ran_ani": ran_ani
     }
     return render(request, "index.html", context)
 
@@ -72,8 +70,10 @@ def anime_detail_page(request, slug):
         Anime.objects.prefetch_related('genres', 'seasons__episodes'),
         slug=slug
     )
+    character = Character.objects.filter(anime=anime).order_by('-gg')
     context = {
         "anime": anime,
+        "character": character
     }
 
     return render(request, "anime_detail.html", context)
@@ -96,7 +96,6 @@ def all_anime_page(request):
     elif sort_option == 'name_desc':
         animes = animes.order_by('-name')
     elif sort_option == 'series_asc':
-        # Считаем общее количество эпизодов через все сезоны, сортируем по убыванию
         animes = animes.annotate(
             total_episodes=db_models.Count('seasons__episodes')
         ).order_by('-total_episodes')
@@ -116,7 +115,36 @@ def films_page(request):
     return render(request, "films.html", {})
 
 def characters_page(request):
-    return render(request, "characters.html", {})
+    character = Character.objects.all().order_by('-gg')
+    eye_colors = Character.objects.values_list('eye_color', flat=True).distinct()
+    hair_colors = Character.objects.values_list('hair_color', flat=True).distinct()
+    genders = Character.objects.values_list('gender', flat=True).distinct()
+
+    search = request.GET.get('search', '')
+    eye_color = request.GET.get('eye_color', '')
+    hair_color = request.GET.get('hair_color', '')
+    gender = request.GET.get('gender', '')
+
+    if search:
+        character = character.filter(name__icontains=search)
+    if eye_color:
+        character = character.filter(eye_color=eye_color)
+    if hair_color:
+        character = character.filter(hair_color=hair_color)
+    if gender:
+        character = character.filter(gender=gender)
+
+    context = {
+        "character": character,
+        "eye_colors": eye_colors,
+        "selected_eye": eye_color,
+        "hair_colors": hair_colors,
+        "selected_hair": hair_color,
+        "genders": genders,
+        "selected_hair": gender
+    }
+
+    return render(request, "characters.html", context)
 
 def episode_detail_page(request, episode_id):
     episode = get_object_or_404(Episode.objects.select_related('season__anime'), id=episode_id)
@@ -126,3 +154,12 @@ def episode_detail_page(request, episode_id):
     }
 
     return render(request, 'episode_detail.html', context)
+
+def all_gg_page(request):
+    character = Character.objects.filter(gg="Главный герой")
+
+    context = {
+        "character": character
+    }
+
+    return render(request, "all_gg.html", context)

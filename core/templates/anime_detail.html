@@ -59,7 +59,7 @@
                     <div class="episode-row">
                         <span class="episode-num">{{ episode.episode_number }}</span>
                         <span class="episode-title">{{ episode.title }}</span>
-                        <a href="{% url 'episode_detail_page' %}" class="episode-play">▶</a>
+                        <a href="#" class="episode-play">▶</a>
                     </div>
                     {% empty %}
                     <p class="season-empty">Эпизоды не добавлены</p>
@@ -73,6 +73,40 @@
 
     </section>
 
+    <section class="characters-page detail-characters">
+        <h2 class="detail-section-title">Персонажи</h2>
+        <div class="characters-scroll">
+            {% for c in character %}
+            <div class="char-card">
+                <div class="char-thumb">
+                    {% if c.image %}
+                        <img src="{{ c.image.url }}" alt="{{ c.name }}"/>
+                    {% else %}
+                        <div class="char-no-img">{{ c.name|first }}</div>
+                    {% endif %}
+                </div>
+                <div class="char-info">
+                    <h3 class="char-name">
+                        {{ c.name }}
+                        {% if c.gg %}
+                            <a href="{% url 'all_gg_page' %}" class="char-gg">★ ГГ</a>
+                        {% endif %}
+                    </h3>
+                    <a href="{% url 'anime_detail_page' c.anime.slug %}" class="char-anime">{{ c.anime.name }}</a>
+                    <div class="char-details">
+                        <span class="char-tag">👁 {{ c.eye_color }}</span>
+                        <span class="char-tag">💇 {{ c.hair_color }}</span>
+                        <span class="char-tag">🎂 {{ c.age }} лет</span>
+                        <span class="char-tag">⚧ {{ c.gender }}</span>
+                        <span class="char-tag">🧬 {{ c.species }}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="characters-empty">Персонажи пока не добавлены 😔</p>
+            {% endfor %}
+        </div>
+    </section>
 </main>
 
 <script>
@@ -89,15 +123,5 @@ function toggleSeason(header) {
     const isOpen = episodes.classList.toggle('open');
     arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Если сезонов > 6 — оборачиваем wrapper в скроллящийся контейнер
-    const wrapper = document.getElementById('seasons-wrapper');
-    const blocks = wrapper.querySelectorAll('.season-block');
-
-    if (blocks.length > 6) {
-        wrapper.classList.add('seasons-wrapper-scrollable');
-    }
-});
 </script>
 {% endblock %}

@@ -53,7 +53,7 @@ class Episode(models.Model):
     def __str__(self):
         return f"Аниме: {self.season.anime} || Сезон: {self.season} || Называние: {self.title} || Эпизод: {self.episode_number}"
 
-class Films(models.Model):
+class Film(models.Model):
     anime = models.ForeignKey(
         Anime, 
         on_delete=models.CASCADE, 
@@ -67,5 +67,47 @@ class Films(models.Model):
     def __str__(self):
         anime_name = self.anime.name if self.anime else "Без аниме"
         return f"Фильм: {self.title} || Аниме: {anime_name}"
-    
 
+class Character(models.Model):
+    GENDER_CHOICES = [
+        ['Мужской', 'Мужской'],
+        ['Женский', 'Женский'],
+        ['Неизвестно', 'Неизвестно']
+    ]
+
+    GG_CHOICES = [
+        ['Главный герой', 'Главный герой'],
+    ]
+
+    EYE_COLOR_CHOICES = [
+        ['Чёрный', 'Чёрный'],
+        ['Синий', 'Синий'],
+        ['Жёлтый', 'Жёлтый'],
+        ['Красный', 'Красный'],
+        ['Зелёный', 'Зелёный'],
+        ['Фиолетывый', 'Фиолетывыё'],
+    ]
+    HAIR_COLOR_CHOICES = [
+        ['Чёрный', 'Чёрный'],
+        ['Синий', 'Синий'],
+        ['Жёлтый', 'Жёлтый'],
+        ['Красный', 'Красный'],
+        ['Зелёный', 'Зелёный'],
+        ['Фиолетывый', 'Фиолетывыё'],
+    ]
+
+    anime = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name="anime")
+
+    eye_color = models.CharField(choices=EYE_COLOR_CHOICES)
+    hair_color = models.CharField(choices=HAIR_COLOR_CHOICES)
+    gender = models.CharField(choices=GENDER_CHOICES)
+    species = models.CharField()
+    age = models.PositiveIntegerField(blank=True, null=True)
+    name = models.CharField()
+    gg = models.CharField(choices=GG_CHOICES, blank=True, null=True, default="True")
+
+    image = models.ImageField(upload_to="characters/")
+
+    def __str__(self):
+        return f"Имя: {self.name} || Пол: {self.gender} || Раса: {self.species} || Возраст: {self.age} {self.gg}"
+    

@@ -1,0 +1,37 @@
+{% extends './base.html' %}
+{% block content %}
+
+<main class="main">
+    <section class="characters-page">
+        <h1 class="characters-title">Персонажи</h1>
+
+        <div class="characters-grid">
+            {% for c in character %}
+            <div class="char-card">
+                <div class="char-thumb">
+                    {% if c.image %}
+                        <img src="{{ c.image.url }}" alt="{{ c.name }}"/>
+                    {% else %}
+                        <div class="char-no-img">{{ c.name|first }}</div>
+                    {% endif %}
+                </div>
+                <div class="char-info">
+                    <h3 class="char-name">{{ c.name }} <a href="{% url 'all_gg_page' %}" class="char-gg">★ ГГ</a></h3>
+                    <a href="{% url 'anime_detail_page' c.anime.slug %}" class="char-anime">{{ c.anime.name }}</a>
+                    <div class="char-details">
+                        <span class="char-tag">👁 {{ c.eye_color }}</span>
+                        <span class="char-tag">💇 {{ c.hair_color }}</span>
+                        <span class="char-tag">🎂 {{ c.age }} лет</span>
+                        <span class="char-tag">⚧ {{ c.gender }}</span>
+                        <span class="char-tag">🧬 {{ c.species }}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="characters-empty">Персонажи пока не добавлены 😔</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+
+{% endblock %}
