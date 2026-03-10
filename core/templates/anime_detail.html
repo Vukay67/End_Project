@@ -29,14 +29,85 @@
                     {% endfor %}
                 </div>
                 <h1 class="detail-title">{{ anime.name }}</h1>
-                <p class="detail-year">📅 {{ anime.release_year|date:"d F Y" }}</p>
+                <div class="shikiori-rating">
+                    <span class="shikimori-rating-score">{{ anime.our_rating }}/5</span>
+                    <span class="shikimori-rating-label">Рейтинг на нашем сайте</span>
+                </div>
+                <div class="shikimori-rating">
+                    <span class="shikimori-rating-score">{{ anime.shikimori_rating }}/10</span>
+                    <span class="shikimori-rating-label">Рейтинг на Shikimori</span>
+                </div>
+                <p class="detail-year">Дата выхода : 📅 {{ anime.release_year|date:"d F Y" }}</p>
                 <div class="detail-desc-wrap">
                     <p class="detail-desc" id="descText">{{ anime.description }}</p>
                     <button class="desc-toggle" id="descToggle" onclick="toggleDesc()">ещё...</button>
                 </div>
                 <div class="detail-actions">
                     <a class="btn-primary" href="#wached">▶ Смотреть</a>
-                    <button class="btn-secondary">+ В список</button>
+                    <div class="watchlist-dropdown-wrap">
+                        <button class="btn-secondary {% if current_bookmark %}watchlist-active{% endif %}"
+                                id="watchlistBtn"
+                                onclick="toggleWatchlist(event)">
+                            {% if current_bookmark == 'planned' %}
+                                👁️ Буду смотреть
+                            {% elif current_bookmark == 'watched' %}
+                                ✅ Просмотрено
+                            {% else %}
+                                + В список
+                            {% endif %}
+                        </button>
+
+                        <div class="watchlist-dropdown" id="watchlistDropdown">
+                            <a class="watchlist-option" href="{% url 'add_bookmark' anime.slug 'planned' %}">
+                                <span class="watchlist-option-icon">👁️</span>
+                                Буду смотреть
+                            </a>
+                            <a class="watchlist-option" href="{% url 'add_bookmark' anime.slug 'watched' %}">
+                                <span class="watchlist-option-icon">✅</span>
+                                Просмотрено
+                            </a>
+                            {% if current_bookmark == "watched" or current_bookmark == "planned" %}
+                            <a class="watchlist-option" href="{% url 'add_bookmark' anime.slug 'delete' %}">
+                                <span class="watchlist-option-icon">🗑</span>
+                                Удалить
+                            </a>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    <div class="rating-wrap">
+                        <button class="btn-secondary {% if current_reating %}watchlist-active{% endif %} rating-btn" id="ratingBtn" onclick="toggleRating(event)">
+                            {% if current_reating == '1' %}
+                                1
+                            {% elif current_reating == '2' %}
+                                2
+                            {% elif current_reating == '3' %}
+                                3
+                            {% elif current_reating == '4' %}
+                                4
+                            {% elif current_reating == '5' %}
+                                5
+                            {% else %}
+                            ⭐ Оценить
+                            {% endif %}
+                        </button>
+                        <div class="rating-dropdown" id="ratingDropdown">
+                            <p class="rating-label">Ваша оценка</p>
+                            <div class="rating-stars">
+                                <a class="rating-star" href="{% url 'add_reating' anime.slug '1' %}">1</a>
+                                <a class="rating-star" href="{% url 'add_reating' anime.slug '2' %}">2</a>
+                                <a class="rating-star" href="{% url 'add_reating' anime.slug '3' %}">3</a>
+                                <a class="rating-star" href="{% url 'add_reating' anime.slug '4' %}">4</a>
+                                <a class="rating-star" href="{% url 'add_reating' anime.slug '5' %}">5</a>
+                                {% if current_reating == "1" or current_reating == "2" or current_reating == "3" or current_reating == "4" or current_reating == "5" %}
+                                <a class="rating-delete" href="{% url 'add_reating' anime.slug 'delete' %}">
+                                    <span class="watchlist-option-icon">🗑</span>
+                                    Удалить
+                                </a>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,7 +130,7 @@
                     <div class="episode-row">
                         <span class="episode-num">{{ episode.episode_number }}</span>
                         <span class="episode-title">{{ episode.title }}</span>
-                        <a href="#" class="episode-play">▶</a>
+                        <a href="{% url 'episode_detail' episode.id %}" class="episode-play">▶</a>
                     </div>
                     {% empty %}
                     <p class="season-empty">Эпизоды не добавлены</p>
@@ -70,7 +141,6 @@
         <p class="season-empty-main">Сезоны пока не добавлены 😔</p>
         {% endfor %}
         </div>
-
     </section>
 
     <section class="characters-page detail-characters">
@@ -94,11 +164,11 @@
                     </h3>
                     <a href="{% url 'anime_detail_page' c.anime.slug %}" class="char-anime">{{ c.anime.name }}</a>
                     <div class="char-details">
-                        <span class="char-tag">👁 {{ c.eye_color }}</span>
-                        <span class="char-tag">💇 {{ c.hair_color }}</span>
-                        <span class="char-tag">🎂 {{ c.age }} лет</span>
-                        <span class="char-tag">⚧ {{ c.gender }}</span>
-                        <span class="char-tag">🧬 {{ c.species }}</span>
+                        <span class="char-tag">Цвет глаз: {{ c.get_eye_color_display }}</span>
+                        <span class="char-tag">Цвет волос: {{ c.get_hair_color_display }}</span>
+                        {% if c.age %}<span class="char-tag">Возраст: {{ c.age }} лет</span>{% endif %}
+                        <span class="char-tag">Пол: {{ c.get_gender_display }}</span>
+                        <span class="char-tag">Раса: {{ c.get_species_display }}</span>
                     </div>
                 </div>
             </div>
@@ -123,5 +193,22 @@ function toggleSeason(header) {
     const isOpen = episodes.classList.toggle('open');
     arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
 }
+
+function toggleWatchlist(e) {
+    e.stopPropagation();
+    document.getElementById('watchlistDropdown').classList.toggle('open');
+}
+
+// Закрыть при клике вне
+document.addEventListener('click', () => {
+    document.getElementById('watchlistDropdown')?.classList.remove('open');
+});
+function toggleRating(e) {
+    e.stopPropagation();
+    document.getElementById('ratingDropdown').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+    document.getElementById('ratingDropdown')?.classList.remove('open');
+});
 </script>
 {% endblock %}

@@ -6,19 +6,22 @@
 
             <!-- Аватар + инфо -->
             <div class="profile-hero">
+                {% if request.user.image %}
+                <img src="{{ request.user.image.url }}" alt="{{ request.user.username }}">
+                {% else %}
                 <div class="profile-avatar-wrap">
                     <div class="profile-avatar">🌸</div>
-                    <span class="profile-badge">Otaku</span>
                 </div>
                 <div class="profile-info">
-                    <h1 class="profile-name">SakuraFan_chan</h1>
-                    <p class="profile-tag">@sakurafan · На сайте с 2023</p>
+                    <h1 class="profile-name">{{ request.user.username }}</h1>
+                    <p class="profile-tag">{{ request.user.email }}</p>
                     <p class="profile-bio">Обожаю сёнэн и романтику. Топ — Demon Slayer и Your Name 🌙</p>
                     <div class="profile-actions">
-                        <button class="btn-primary">Редактировать</button>
+                        <a href="{% url 'redact_page' %}" class="btn-primary">Редактировать</a>
                         <button class="btn-secondary">Поделиться</button>
                     </div>
                 </div>
+                {% endif %}
             </div>
 
             <!-- Вкладки списков -->
@@ -30,55 +33,48 @@
 
                 <!-- Буду смотреть -->
                 <div class="watchlist-panel active" id="tab-plan">
-                    <div class="anime-card">
-                        <div class="anime-thumb"><img src="https://avatars.mds.yandex.net/get-kinopoisk-image/10592371/352719fb-90a9-483b-96e8-3d1167ce5d0b/180" alt="" /></div>
+                    {% for p in planned %}
+                    <a href="{% url 'anime_detail_page' p.anime.slug %}" class="anime-card">
+                        <div class="anime-thumb"><img src="{{ p.anime.image.url }}" alt="{{ p.anime.name }}" /></div>
                         <div class="anime-card-info">
-                            <span class="anime-title">Jujutsu Kaisen</span>
-                            <span class="anime-genre">Сёнэн · Экшн</span>
+                            <span class="anime-title">{{ p.anime.name }}</span>
+                            <span class="anime-genre">
+                            {% for genre in p.anime.genres.all %}
+                                {{ genre.name }}{% if not forloop.last %} · {% endif %}
+                            {% empty %}
+                                Без жанра
+                            {% endfor %}
+                            </span>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Смотрю -->
-                <div class="watchlist-panel" id="tab-watching">
-                    <div class="anime-card">
-                        <div class="anime-thumb"><img src="https://m.media-amazon.com/images/I/71ba0abh6TL.jpg" alt="" /></div>
-                        <div class="anime-card-info">
-                            <span class="anime-title">Bleach: TYBW</span>
-                            <span class="anime-genre">Сёнэн · Экшн</span>
-                        </div>
-                        <span class="anime-progress">12 / 26 эп.</span>
-                    </div>
+                    </a>
+                    {% endfor %}
                 </div>
 
                 <!-- Просмотрено -->
                 <div class="watchlist-panel" id="tab-watched">
-                    <div class="anime-card">
-                        <div class="anime-thumb"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgajCga6qsSinuu17g0Sv1N7_4PqfNADYhzA&s" alt="" /></div>
+                    {% for w in watched %}
+                    <a href="{% url 'anime_detail_page' w.anime.slug %}"  class="anime-card">
+                        <div class="anime-thumb"><img src="{{ w.anime.image.url }}" alt="{{ w.anime.name }}" /></div>
                         <div class="anime-card-info">
-                            <span class="anime-title">Death Note</span>
-                            <span class="anime-genre">Триллер · Мистика</span>
+                            <span class="anime-title">{{ w.anime.name }}</span>
+                            <span class="anime-genre">
+                            {% for genre in w.anime.genres.all %}
+                                {{ genre.name }}{% if not forloop.last %} · {% endif %}
+                            {% empty %}
+                                Без жанра
+                            {% endfor %}
+                            </span>
+                            <span class="anime-rating">
+                                    {% if w.user_rating %}
+                                        ⭐ {{ w.user_rating }}/5
+                                    {% else %}
+                                        Не добавлен рейтинг
+                                    {% endif %}
+                            </span>
                         </div>
-                        <span class="anime-rating">★ 9</span>
-                    </div>
+                    </a>
+                    {% endfor %}
                 </div>
-            </div>
-
-            <!-- Любимые аниме -->
-            <div class="profile-section">
-                <h2 class="profile-section-title">❤️ Любимые аниме</h2>
-                <div class="anime-list">
-                    <div class="anime-card">
-                        <div class="anime-thumb"><img src="" alt="" /></div>
-                        <div class="anime-card-info">
-                            <span class="anime-title">Demon Slayer</span>
-                            <span class="anime-genre">Сёнэн · Экшн</span>
-                        </div>
-                        <span class="anime-rating">★ 10</span>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </main>
 </body>

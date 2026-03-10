@@ -14,7 +14,7 @@
                 <p class="hero-sub">Смотри лучшие аниме онлайн, веди список и следи за новинками.</p>
                 <div class="hero-actions">
                     
-                    <a href="#" class="btn-primary">Смотреть сейчас</a>
+                    <a href="#wer" class="btn-primary">Смотреть сейчас</a>
                     <a href="{% url 'all_anime_page' %}" class="btn-secondary">Каталог</a>
                 </div>
             </div>
@@ -22,12 +22,12 @@
 
         <!-- ANIME GRID -->
         <section class="catalog">
-            <div class="catalog-header">
+            <div class="catalog-header" style="margin-top: 60px;">
                 <h2 class="catalog-title">🔥 Популярное</h2>
             </div>
 
             <div class="anime-grid">
-                {% for anime in anime %}
+                {% for anime in ran_ani %}
                 <a href="{% url 'anime_detail_page' anime.slug %}" class="anime-grid-card">
                     <div class="anime-grid-thumb">
                         {% if anime.image %}
@@ -48,8 +48,79 @@
                         </span>
                     </div>
                 </a>
+                {% for anime in ran_ani1 %}
+                <a href="{% url 'anime_detail_page' anime.slug %}" class="anime-grid-card">
+                    <div class="anime-grid-thumb">
+                        {% if anime.image %}
+                            <img src="{{ anime.image.url }}" alt="{{ anime.name }}" />
+                        {% else %}
+                            <div class="anime-grid-no-img">{{ anime.name|first }}</div>
+                        {% endif %}
+                        <span class="anime-grid-year">{{ anime.release_year|date:"Y" }}</span>
+                    </div>
+                    <div class="anime-grid-info">
+                        <span class="anime-grid-title">{{ anime.name }}</span>
+                        <span class="anime-grid-genre">
+                            {% for genre in anime.genres.all %}
+                                {{ genre.name }}{% if not forloop.last %} · {% endif %}
+                            {% empty %}
+                                Без жанра
+                            {% endfor %}
+                        </span>
+                    </div>
+                </a>
+                {% endfor %}
+                {% for anime in ran_ani2 %}
+                <a href="{% url 'anime_detail_page' anime.slug %}" class="anime-grid-card">
+                    <div class="anime-grid-thumb">
+                        {% if anime.image %}
+                            <img src="{{ anime.image.url }}" alt="{{ anime.name }}" />
+                        {% else %}
+                            <div class="anime-grid-no-img">{{ anime.name|first }}</div>
+                        {% endif %}
+                        <span class="anime-grid-year">{{ anime.release_year|date:"Y" }}</span>
+                    </div>
+                    <div class="anime-grid-info">
+                        <span class="anime-grid-title">{{ anime.name }}</span>
+                        <span class="anime-grid-genre">
+                            {% for genre in anime.genres.all %}
+                                {{ genre.name }}{% if not forloop.last %} · {% endif %}
+                            {% empty %}
+                                Без жанра
+                            {% endfor %}
+                        </span>
+                    </div>
+                </a>
+                {% endfor %}
                 {% empty %}
                 <p class="catalog-empty">Аниме пока не добавлено 😔</p>
+                {% endfor %}
+            </div>
+            <div class="catalog-header" style="margin-top: 60px;">
+                <h2 class="catalog-title">Аниме, <a style="color: white;" href="{% url 'profil_page' %}">ожидающие просмотра</a></h2>
+            </div>
+            <div class="anime-grid" id="wer">
+                {% for p in nex_ani %}
+                <a href="{% url 'anime_detail_page' p.slug %}" class="anime-grid-card">
+                    <div class="anime-grid-thumb">
+                        {% if p.image %}
+                            <img src="{{ p.image.url }}" alt="{{ p.name }}" />
+                        {% else %}
+                            <div class="anime-grid-no-img">{{ p.name|first }}</div>
+                        {% endif %}
+                        <span class="anime-grid-year">{{ p.release_year|date:"Y" }}</span>
+                    </div>
+                    <div class="anime-grid-info">
+                        <span class="anime-grid-title">{{ p.name }}</span>
+                        <span class="anime-grid-genre">
+                            {% for genre in p.genres.all %}
+                                {{ genre.name }}{% if not forloop.last %} · {% endif %}
+                            {% empty %}
+                                Без жанра
+                            {% endfor %}
+                        </span>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
 

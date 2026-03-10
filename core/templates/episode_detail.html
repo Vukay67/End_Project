@@ -1,23 +1,39 @@
 {% extends './base.html' %}
 {% block content %}
+<main class="main">
+    <span style="font-size: 35px;">
+        <a href="{% url 'anime_detail_page' episode.season.anime.slug %}" style="margin-bottom: 16px; font-size: 35px; color: white;">{{ episode.season.anime.name }}</a> 
+        {{ episode.episode_number }} серия
+    </span>
+    <h4 style="margin-top: 20px;">{{ episode.title }}</h4>
 
-<div style="border:1px solid #ccc; padding:15px; border-radius:8px;">
-    <h1>Эпизод {{ episode.episode_number }}: {{ episode.title }}</h1>
-    <h2>Аниме: {{ episode.season.anime.name }}</h2>
-    <p><strong>Сезон:</strong> {{ episode.season.seasons_number }}</p>
-    <p><strong>Описание:</strong> {{ episode.season.anime.description }}</p>
-    <p><strong>Год выхода:</strong> {{ episode.season.anime.release_year }}</p>
-    <p><strong>Рейтинг Shikimori:</strong> {{ episode.season.anime.shikimori_rating }}</p>
-    <p><strong>Наш рейтинг:</strong> {{ episode.season.anime.our_rating }}</p>
-    
-    {% if episode.video %}
-    <video width="600" controls>
-        <source src="{{ episode.video.url }}" type="video/mp4">
-        Ваш браузер не поддерживает видео.
-    </video>
-    {% else %}
-    <p>Видео отсутствует</p>
-    {% endif %}
-</div>
-
+    <div class="episode-grid">
+        <!-- Центр -->
+        <div class="container">
+            <div class="player">
+                {% if episode.video %}
+                <video width="100%" controls style="border-radius:10px; margin-bottom:25px; display:block; max-height:440px;">
+                    <source src="{{ episode.video.url }}" type="video/mp4">
+                </video>
+                {% else %}
+                <div style="width:100%; height:500px; background:#1b1b24; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:25px; color:#aaa; font-size:18px;">
+                    🎬 Видео пока не добавлено
+                </div>
+                {% endif %}
+            </div>
+            <div class="episode-nav">
+                {% if prev_episode %}
+                <a href="{% url 'episode_detail' prev_episode.id %}" class="nav-btn">◀ {{ prev_episode.episode_number }} серия</a>
+                {% else %}
+                <a href="{% url 'anime_detail_page' episode.season.anime.slug %}#wached" class="nav-btn">Все серии</a>
+                {% endif %}
+                {% if next_episode %}
+                <a href="{% url 'episode_detail' next_episode.id %}" class="nav-btn">{{ next_episode.episode_number }} серия ▶</a>
+                {% else %}
+                <a href="{% url 'anime_detail_page' episode.season.anime.slug %}#wached" class="nav-btn">Все серии</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}
