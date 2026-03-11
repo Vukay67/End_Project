@@ -5,23 +5,37 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db.models.functions import Cast
 from django.db.models import FloatField, Avg
+from django.utils import timezone
 
 # ================== Genre ==================
 class Genre(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name="Название")
 
     def __str__(self):
         return self.name
 
 # ================== Anime ==================
 class Anime(models.Model):
+    event = ""
+    month = timezone.now().month
+    if month in (12, 1, 2):
+        event = "winter"
+    elif month in (3, 4, 5):
+        event = "Весна"
+    elif month in (6, 7, 8):
+        event = "summer"
+    elif month in (9, 10, 11):
+        event = "autumn"
+
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     image = models.ImageField(upload_to="anime_poster")
     description = models.TextField()
     release_year = models.DateField("Дата")
     shikimori_rating = models.DecimalField(max_digits=3, decimal_places=1)
-    our_rating = models.FloatField(default=0)  # Автоматически обновляемое поле
+    our_rating = models.FloatField(default=0)
+    ss_year = models.CharField(default=event)
+    year = models.CharField(default=timezone.now().year)
 
     genres = models.ManyToManyField("Genre", related_name="animes")
 
@@ -91,26 +105,11 @@ class Episode(models.Model):
     title = models.CharField(max_length=200)
     episode_number = models.PositiveIntegerField()
     video = models.FileField(upload_to="episodes/")
+    poster = models.ImageField(upload_to="episode_posters/")
 
     def __str__(self):
         return f"Аниме: {self.season.anime} || Сезон: {self.season.seasons_number} || Название: {self.title} || Эпизод: {self.episode_number}"
-
-# ================== Film ==================
-class Film(models.Model):
-    anime = models.ForeignKey(
-        Anime,
-        on_delete=models.CASCADE,
-        related_name="films",
-        blank=True,
-        null=True
-    )
-    title = models.CharField(max_length=200)
-    release_date = models.DateField("Дата выхода", blank=True, null=True)
-
-    def __str__(self):
-        anime_name = self.anime.name if self.anime else "Без аниме"
-        return f"Фильм: {self.title} || Аниме: {anime_name}"
-
+    
 # ================== Character ==================
 class Character(models.Model):
     GENDER_CHOICES = [
@@ -143,6 +142,7 @@ class Character(models.Model):
         ['Ангел',   'Ангел'],
         ['Гном',    'Гном'],
         ['Эльф',    'Эльф'],
+        ['Неизвестно', 'Неизвестно']
     ]
 
     anime      = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name="characters")

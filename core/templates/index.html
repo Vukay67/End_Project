@@ -22,6 +22,33 @@
 
         <!-- ANIME GRID -->
         <section class="catalog">
+            <div class="catalog-header" style="margin-top: 60px; margin-left: 450px;">
+                <h2 class="catalog-title">{{ event }} {{ year }} аниме</h2>
+            </div>
+            <div class="anime-grid">
+                {% for a in event_ani %}
+                <a href="{% url 'anime_detail_page' a.slug %}" class="anime-grid-card">
+                    <div class="anime-grid-thumb">
+                        {% if a.image %}
+                            <img src="{{ a.image.url }}" alt="{{ a.name }}" />
+                        {% else %}
+                            <div class="anime-grid-no-img">{{ a.name|first }}</div>
+                        {% endif %}
+                        <span class="anime-grid-year">{{ a.release_year|date:"Y" }}</span>
+                    </div>
+                    <div class="anime-grid-info">
+                        <span class="anime-grid-title">{{ a.name }}</span>
+                        <span class="anime-grid-genre">
+                            {% for genre in a.genres.all %}
+                                {{ genre.name }}{% if not forloop.last %} · {% endif %}
+                            {% empty %}
+                                Без жанра
+                            {% endfor %}
+                        </span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
             <div class="catalog-header" style="margin-top: 60px;">
                 <h2 class="catalog-title">🔥 Популярное</h2>
             </div>
@@ -123,7 +150,6 @@
                 </a>
                 {% endfor %}
             </div>
-
         </section>
 
     </main>

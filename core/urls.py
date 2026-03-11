@@ -1,7 +1,10 @@
 ﻿from django.urls import path
+from django.urls import re_path
+from . import views
 from .views import * 
 
 urlpatterns = [
+    re_path(r'^media/(?P<path>.*)$', views.serve_video),
     path('', main_page, name="main_page"),
     path('about/', about_page, name="about_page"),
     path('contacts', contacts_page, name="contacts_page"),

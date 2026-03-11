@@ -8,12 +8,54 @@ from django.db import models as db_models
 from django.shortcuts import get_object_or_404
 from django.db.models import OuterRef, Subquery
 from random import choices
+import os
+from django.http import StreamingHttpResponse
+from django.conf import settings
+from django.utils import timezone
+
+def serve_video(request, path):
+    full_path = os.path.join(settings.MEDIA_ROOT, path)
+    file_size = os.path.getsize(full_path)
+    range_header = request.META.get('HTTP_RANGE', '').strip()
+
+    if range_header and range_header.startswith('bytes='):
+        first, last = range_header.replace('bytes=', '').split('-')
+        first = int(first)
+        last = int(last) if last else file_size - 1
+        length = last - first + 1
+
+        def iterator():
+            with open(full_path, 'rb') as f:
+                f.seek(first)
+                remaining = length
+                while remaining:
+                    chunk = f.read(min(8192, remaining))
+                    if not chunk:
+                        break
+                    remaining -= len(chunk)
+                    yield chunk
+
+        response = StreamingHttpResponse(iterator(), status=206, content_type='video/mp4')
+        response['Content-Range'] = f'bytes {first}-{last}/{file_size}'
+        response['Accept-Ranges'] = 'bytes'
+        response['Content-Length'] = str(length)
+        return response
+
+    response = StreamingHttpResponse(open(full_path, 'rb'), content_type='video/mp4')
+    response['Accept-Ranges'] = 'bytes'
+    response['Content-Length'] = str(file_size)
+    return response
 
 
 def main_page(request):
     user = request.user
     anime = Anime.objects.prefetch_related('genres').all()
     top_ani = Anime.objects.filter(our_rating__gte=4.5)
+    event = Anime.event
+    year = timezone.now().year
+    event_ani = Anime.objects.filter(ss_year=event)
+
+    print(event_ani)
 
     planned_anime = None
 
@@ -35,7 +77,10 @@ def main_page(request):
         "ran_ani": ran_ani,
         "ran_ani1": ran_ani1,
         "ran_ani2": ran_ani2,
-        "nex_ani": planned_anime
+        "nex_ani": planned_anime,
+        "event": event,
+        "event_ani":event_ani,
+        "year": year
     }
     return render(request, "index.html", context)
 
